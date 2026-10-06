@@ -1,0 +1,181 @@
+/* Tokens adapted from Josh-Cena.github.io/src/global.css. */
+html {
+  --max-page-width: 1000px;
+  --color-background: white;
+  --color-text: black;
+  --color-text-subdued: #666;
+  --color-primary: #08827e;
+  --color-primary-dark: #077571;
+  --color-primary-darker: #076f6b;
+  --color-primary-darkest: #065b58;
+  --color-primary-light: #098f8b;
+  --color-primary-lighter: #099591;
+  --color-primary-lightest: #0aa9a4;
+  --color-shadow: #00000020;
+  --color-red: #ca393e;
+  --color-pink: #ca3986;
+  --color-violet: #c539ca;
+  --color-purple: #7d39ca;
+  --color-indigo: #393eca;
+  --color-blue: #3986ca;
+  --color-seagreen: #39ca7d;
+  --color-green: #3eca39;
+  --color-yellowgreen: #86ca39;
+  --color-yellow: #cac539;
+  --color-orange: #ca7d39;
+  --height-navbar: 4rem;
+  --margin-main-h: 2rem;
+  --margin-main-v: 0;
+  --margin-paragraph: 1rem;
+  --font-main: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-code: Menlo, Consolas, Monaco, monospace;
+  --border-radius-small: 0.25em;
+  --border-radius-medium: 0.5em;
+  --border-radius-large: 1em;
+
+  font-family: var(--font-main);
+  scroll-padding-top: var(--height-navbar);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition:
+    background-color 0.2s ease-out,
+    color 0.2s ease-out;
+  color-scheme: light;
+}
+html[data-color-mode="dark"] {
+  --color-background: #18191a;
+  --color-text: white;
+  --color-text-subdued: #aaa;
+  --color-primary: #39cac4;
+  --color-primary-dark: #31b8b2;
+  --color-primary-darker: #2eaea8;
+  --color-primary-darkest: #268f8b;
+  --color-primary-light: #4dcfca;
+  --color-primary-lighter: #58d2cd;
+  --color-primary-lightest: #76dad6;
+  --color-shadow: #ffffff20;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-color-mode="light"]) {
+    --color-background: #18191a;
+    --color-text: white;
+    --color-text-subdued: #aaa;
+    --color-primary: #39cac4;
+    --color-primary-dark: #31b8b2;
+    --color-primary-darker: #2eaea8;
+    --color-primary-darkest: #268f8b;
+    --color-primary-light: #4dcfca;
+    --color-primary-lighter: #58d2cd;
+    --color-primary-lightest: #76dad6;
+    --color-shadow: #ffffff20;
+    color-scheme: dark;
+  }
+}
+
+html {
+  --color-surface: color-mix(
+    in srgb,
+    var(--color-text) 4%,
+    var(--color-background)
+  );
+  --color-selected: color-mix(
+    in srgb,
+    var(--color-primary) 15%,
+    var(--color-background)
+  );
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-synthesis: none;
+}
+
+body {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--color-primary);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: var(--color-text);
+}
+
+button,
+input,
+select,
+textarea {
+  border: 1px solid var(--color-shadow);
+  border-radius: var(--border-radius-small);
+}
+
+input,
+select,
+textarea {
+  background: var(--color-background);
+  padding: 0.5rem 0.65rem;
+  max-width: 100%;
+}
+
+input {
+  accent-color: var(--color-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-subdued);
+  opacity: 1;
+}
+
+button {
+  cursor: pointer;
+  background: transparent;
+  padding: 0.55rem 1rem;
+  line-height: 1.4;
+}
+
+button:hover:not(:disabled) {
+  background: var(--color-selected);
+  color: var(--color-primary);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--color-selected);
+}
+
+label {
+  font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
+}

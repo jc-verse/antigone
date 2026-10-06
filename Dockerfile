@@ -2,9 +2,14 @@ FROM oven/bun:1.3.14-slim AS base
 WORKDIR /workspace
 COPY package.json bun.lock ./
 
-FROM base AS build
+FROM base AS development
+ENV NODE_ENV=development
+EXPOSE 4410
 RUN bun install --frozen-lockfile --ignore-scripts
 COPY . .
+CMD ["sh", "-c", "bun install --frozen-lockfile --ignore-scripts && bun run dev"]
+
+FROM development AS build
 RUN bun run build
 
 FROM base AS dependencies

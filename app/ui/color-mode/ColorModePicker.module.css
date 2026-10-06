@@ -1,0 +1,86 @@
+.appearance {
+  display: grid;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.select,
+.select::picker(select) {
+  appearance: base-select;
+  border: 1px solid var(--color-shadow);
+  border-radius: var(--border-radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.select {
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.select:hover,
+.select:open {
+  background: var(--color-selected);
+  color: var(--color-primary);
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.select::picker-icon {
+  margin-left: auto;
+  color: var(--color-text-subdued);
+}
+
+.select:open::picker-icon {
+  rotate: 180deg;
+}
+
+.select::picker(select) {
+  margin-top: 6px;
+  padding: 4px;
+  box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+.select option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+}
+
+.select option:hover,
+.select option:focus,
+.select option:checked {
+  background: var(--color-selected);
+  color: var(--color-primary);
+}
+
+.select option::checkmark {
+  order: 1;
+  margin-left: auto;
+}
+
+.select.select > button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.select svg {
+  flex-shrink: 0;
+}

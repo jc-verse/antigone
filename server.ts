@@ -1,3 +1,4 @@
+import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import { randomBytes } from "node:crypto";
 import express from "express";
@@ -14,25 +15,32 @@ declare global {
 
 async function startServer(root: URL): Promise<void> {
   const production = process.env.NODE_ENV === "production";
+  const app = express();
+  const httpServer = createServer(app);
   const viteServer = production
     ? null
     : await import("vite").then((vite) =>
         vite.createServer({
           root: fileURLToPath(root),
-          server: { middlewareMode: true },
+          server: {
+            middlewareMode: true,
+            hmr: { server: httpServer },
+            watch: { usePolling: true, interval: 250 },
+          },
         }),
       );
 
-  const app = express();
   app.disable("x-powered-by");
   app.set("trust proxy", 1);
 
   app.use((req, res, next) => {
+    req.headers["x-antigone-client-ip"] =
+      req.socket.remoteAddress ?? "127.0.0.1";
     res.locals.nonce = randomBytes(24).toString("base64");
     res.set({
       "X-Content-Type-Options": "nosniff",
       "Referrer-Policy": "no-referrer",
-      "Content-Security-Policy": `default-src 'self'; script-src 'self' 'nonce-${res.locals.nonce}'; style-src 'self'; img-src 'self' blob:; connect-src 'self'${production ? "" : " ws: wss:"}; frame-ancestors 'none'; base-uri 'none'; form-action 'self'`,
+      "Content-Security-Policy": `default-src 'self'; script-src 'self' 'nonce-${res.locals.nonce}'; style-src 'self'${production ? "" : " 'unsafe-inline'"}; img-src 'self' blob: data:; connect-src 'self'${production ? "" : " ws: wss:"}; frame-ancestors 'none'; base-uri 'none'; form-action 'self'`,
     });
     next();
   });
@@ -66,7 +74,9 @@ async function startServer(root: URL): Promise<void> {
     void handleRequest(req, res, next).catch(next);
   });
 
-  app.listen(4410, "0.0.0.0", () => console.log("Antigone server ready"));
+  httpServer.listen(4410, "0.0.0.0", () =>
+    console.log("Antigone server ready"),
+  );
 }
 
 await startServer(new URL("./", import.meta.url));

@@ -1,0 +1,50 @@
+.settings {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 0;
+}
+
+.settingsDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  max-width: calc(100vw - 2rem);
+  z-index: 10;
+  padding: 10px;
+  border: 1px solid var(--color-shadow);
+  border-radius: var(--border-radius-small);
+  background: var(--color-surface);
+  box-shadow: 0 4px 12px var(--color-shadow);
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.settingsDropdown :is(button, a) {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--color-shadow);
+  border-radius: var(--border-radius-small);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  text-decoration: none;
+}
+
+.settingsDropdown :is(button, a):hover:not(:disabled) {
+  background: var(--color-selected);
+  color: var(--color-primary);
+}

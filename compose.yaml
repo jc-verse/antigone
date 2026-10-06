@@ -3,13 +3,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: runtime
+      target: development
     restart: unless-stopped
+    environment:
+      NODE_ENV: development
     env_file:
       - .env
     ports: ["127.0.0.1:4410:4410"]
     volumes:
+      - .:/workspace
+      - antigone_node_modules:/workspace/node_modules
       - antigone_data:/data
 volumes:
   antigone_data:
     name: antigone_data
+  antigone_node_modules:
