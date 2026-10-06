@@ -1,0 +1,15 @@
+# Private configuration
+.env
+.env.*
+!.env.example
+.secrets/
+
+# Installed dependencies and generated output
+node_modules/
+**/build/
+**/.vite/
+*.log
+dist/
+.DS_Store
+.cache/
+

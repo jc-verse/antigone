@@ -1,0 +1,12 @@
+.git
+.secrets
+.env
+.env.*
+**/.env
+**/.env.*
+**/node_modules
+**/build
+**/.vite
+
+
+**/.cache

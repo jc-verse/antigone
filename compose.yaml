@@ -1,0 +1,15 @@
+services:
+  antigone:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports: ["127.0.0.1:4410:4410"]
+    volumes:
+      - antigone_data:/data
+volumes:
+  antigone_data:
+    name: antigone_data
