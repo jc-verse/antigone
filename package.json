@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "db:push": "mkdir -p /data && bun --bun drizzle-kit push",
     "dev": "bun server.ts",
     "build": "bun --bun remix vite:build && bun build --target=bun --outdir=build/bin app/runpod_client.ts app/runpod_provisioner.ts",
     "start": "NODE_ENV=production bun server.ts",
@@ -14,11 +15,16 @@
   },
   "dependencies": {
     "@better-auth/passkey": "^1.7.7",
+    "@better-auth/utils": "^0.4.2",
+    "@libsql/client": "^0.18.0",
     "@remix-run/express": "2.17.5",
     "@remix-run/node": "2.17.5",
     "@remix-run/react": "2.17.5",
+    "@simplewebauthn/browser": "^13.3.0",
     "better-auth": "^1.7.7",
     "clsx": "^2.1.1",
+    "drizzle-kit": "^0.31.11",
+    "drizzle-orm": "^0.45.3",
     "express": "^4.21.2",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
@@ -47,5 +53,8 @@
   "bin": {
     "antigone-generate": "./build/bin/runpod_client.js",
     "antigone-provision": "./build/bin/runpod_provisioner.js"
+  },
+  "patchedDependencies": {
+    "drizzle-kit@0.31.11": "patches/drizzle-kit@0.31.11.patch"
   }
 }

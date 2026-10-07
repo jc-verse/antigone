@@ -1,6 +1,7 @@
 FROM oven/bun:1.3.14-slim AS base
 WORKDIR /workspace
 COPY package.json bun.lock ./
+COPY patches ./patches
 
 FROM base AS development
 ENV NODE_ENV=development
@@ -22,6 +23,8 @@ WORKDIR /workspace
 COPY --from=dependencies /workspace/node_modules ./node_modules
 COPY package.json ./package.json
 COPY --from=build /workspace/build ./build
+COPY drizzle.config.ts ./drizzle.config.ts
+COPY app/services/db/schema.ts ./app/services/db/schema.ts
 RUN chmod +x build/bin/*.js && bun link
 COPY server.ts ./server.ts
-CMD ["bun", "server.ts"]
+CMD ["bun", "run", "start"]

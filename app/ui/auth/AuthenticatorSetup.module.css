@@ -1,0 +1,59 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.actions a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+button.primary {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-selected);
+}
+
+button.primary:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+
+.setup label {
+  display: block;
+  margin-top: 1rem;
+}
+.setup input {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.qr {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.setupKey {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-block: 1rem;
+}
+
+.recoveryCodes {
+  padding: 1rem;
+  background: var(--color-surface);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.setup .checkbox {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.setup .checkbox input {
+  width: auto;
+  margin: 0;
+}

@@ -31,9 +31,12 @@ async function startServer(root: URL): Promise<void> {
       );
 
   app.disable("x-powered-by");
-  app.set("trust proxy", 1);
+  app.set("trust proxy", false);
 
   app.use((req, res, next) => {
+    delete req.headers["x-forwarded-host"];
+    delete req.headers["x-forwarded-proto"];
+    delete req.headers["x-forwarded-for"];
     req.headers["x-antigone-client-ip"] =
       req.socket.remoteAddress ?? "127.0.0.1";
     res.locals.nonce = randomBytes(24).toString("base64");
