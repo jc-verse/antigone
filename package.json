@@ -5,7 +5,7 @@
   "scripts": {
     "db:push": "mkdir -p /data && bun --bun drizzle-kit push",
     "dev": "bun server.ts",
-    "build": "bun --bun remix vite:build && bun build --target=bun --outdir=build/bin app/runpod_client.ts app/runpod_provisioner.ts",
+    "build": "bun --bun remix vite:build && bun build --target=bun --outdir=build/bin --entry-naming='[name].[ext]' app/services/generation/runpod_client.ts app/services/runpod/runpod_provisioner.ts",
     "start": "NODE_ENV=production bun server.ts",
     "typecheck": "bun --bun tsc --noEmit",
     "format": "bun --bun prettier --write .",

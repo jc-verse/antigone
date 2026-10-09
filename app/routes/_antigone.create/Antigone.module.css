@@ -1,0 +1,88 @@
+.antigone {
+  max-width: var(--max-page-width);
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+@media (max-width: 600px) {
+  .antigone {
+    margin: 1.25rem auto;
+    padding: 0 1rem;
+  }
+}
+
+.queue {
+  margin: 2rem 0;
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.queueTable {
+  width: 100%;
+  min-width: 52rem;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.queueTable th,
+.queueTable td {
+  padding: 0.85rem;
+  border-bottom: 1px solid var(--color-shadow);
+  vertical-align: top;
+}
+
+.queueTable th {
+  background: var(--color-surface);
+}
+
+.jobPrompt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-width: 12rem;
+  max-width: 28rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.references {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  width: 9rem;
+}
+
+.references img {
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
+  border-radius: var(--border-radius-medium);
+}
+
+.jobProgress {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 16rem;
+}
+
+.jobProgress progress {
+  flex: 0 0 6rem;
+  width: 6rem;
+  height: 0.65rem;
+  accent-color: var(--color-primary);
+}
+
+.jobProgress span {
+  overflow-wrap: anywhere;
+}
+
+.jobActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

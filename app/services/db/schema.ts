@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  blob,
   check,
   index,
   integer,
@@ -131,4 +132,22 @@ export const runpodSetup = sqliteTable(
   "runpod_setup",
   { id: integer().primaryKey(), state: text().notNull() },
   (table) => [check("runpod_setup_singleton", sql`${table.id} = 1`)],
+);
+
+export const generationJobs = sqliteTable("generation_jobs", {
+  sequence: integer().primaryKey({ autoIncrement: true }),
+  id: text().notNull().unique(),
+  createdAt: integer("created_at").notNull(),
+  state: text().notNull(),
+});
+export const generationAssets = sqliteTable(
+  "generation_assets",
+  {
+    id: text().primaryKey(),
+    jobId: text("job_id").notNull(),
+    name: text().notNull(),
+    type: text().notNull(),
+    data: blob({ mode: "buffer" }).notNull(),
+  },
+  (table) => [index("generation_assets_job").on(table.jobId)],
 );

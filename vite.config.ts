@@ -9,7 +9,7 @@ declare module "@remix-run/server-runtime" {
 export default defineConfig({
   resolve: {
     alias: {
-      "./runpod_bootstrap.py": `${import.meta.dirname}/app/runpod_bootstrap.py?raw`,
+      "./runpod_bootstrap.py": `${import.meta.dirname}/app/services/runpod/runpod_bootstrap.py?raw`,
     },
   },
   ssr: { external: ["bun:sqlite"] },

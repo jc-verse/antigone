@@ -1,0 +1,87 @@
+.library {
+  max-width: var(--max-page-width);
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  align-items: start;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.preview {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.preview:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.dialog {
+  box-sizing: border-box;
+  width: min(64rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 1.5rem;
+  overflow-y: auto;
+  border: 1px solid var(--color-shadow);
+  border-radius: var(--border-radius-medium);
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 65%);
+}
+
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.heading h2 {
+  font-size: 1.1rem;
+}
+
+.prompt {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.inputs img {
+  width: 10rem;
+  height: 10rem;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .library {
+    padding: 0 1rem;
+  }
+}

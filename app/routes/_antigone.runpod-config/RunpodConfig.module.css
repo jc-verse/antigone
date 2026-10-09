@@ -1,0 +1,86 @@
+.page {
+  max-width: var(--max-page-width);
+  margin: 2rem auto;
+  padding: 0 2rem;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .page {
+    margin: 1.25rem auto;
+    padding: 0 1rem;
+  }
+}
+
+.runpodToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.runpodToolbar h1 {
+  margin: 0;
+}
+
+.page p,
+.page output {
+  font-size: 0.9rem;
+}
+
+.page progress {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  accent-color: var(--color-primary);
+}
+
+.downloads {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.downloads label {
+  display: block;
+}
+
+.downloadDetail {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.models {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--color-shadow);
+  border-radius: var(--border-radius-medium);
+}
+
+.models label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.models p {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+button.primary {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-selected);
+}
+
+button.primary:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: var(--color-background);
+}
