@@ -44,7 +44,7 @@ The web model selector defaults to **Auto** and shows only models selected for t
 
 Authentication and UI components live alongside the generation code in `app/`. Server and build configuration live at the project root. This project has one package, lockfile, and set of development tools. Run `bun run typecheck`, `bun run lint`, or `bun run build` here.
 
-`compose.yaml` builds the app with the local `Dockerfile`, publishes its HTTP port, and mounts the persistent data volume.
+The repository's `compose.yaml` builds the development image with the local `Dockerfile`, publishes its HTTP port, and mounts the persistent data volume. For deployment from a published image, use the Compose example below.
 
 ### Docker configuration
 
@@ -64,7 +64,7 @@ The file is ignored by Git and excluded from Docker builds. Compose injects it i
 | `GHCR_TOKEN` | Optional registry token; set together with `GHCR_USERNAME` |
 | `HF_TOKEN` | Optional authenticated Hugging Face downloads |
 
-After configuring `.env`, run:
+For local development with the repository's Compose file, after configuring `.env`, run:
 
 ```sh
 docker compose build
@@ -75,6 +75,78 @@ docker compose up -d
 Schema changes are applied manually with `db:push`, never during startup. Back up existing data before any destructive schema change. Sign in with `INIT_PASSWORD` to choose a new password and configure an authenticator, then optionally register a passkey. Subsequent sign-ins use password plus two-factor authentication, or a passkey.
 
 Antigone listens on `0.0.0.0:4410` inside the container. Compose publishes it at `127.0.0.1:4410`; to use another host port, change the mapping, for example `127.0.0.1:8080:4410`, or pass `-p 127.0.0.1:8080:4410` to `docker run`. The port is not configured through `.env`. For local use, set `APP_ORIGIN=http://localhost:4410` and open that exact address (not `127.0.0.1`). If you map another host port, include it in `APP_ORIGIN`. For remote access, point your HTTPS reverse proxy at the published port and set `APP_ORIGIN` to the external HTTPS address. Configure the proxy to preserve the original host and stream queue updates without buffering. Forwarded headers are not trusted; rate limits use the socket address. Persistent data is stored in the `antigone_data` Docker volume. Recreate the app container after changing `.env`; existing GPU pods do not receive updated credentials.
+
+## Publishing the app image
+
+Publish the Dockerfile's `runtime` stage to `ghcr.io/jc-verse/antigone`. The app image supports Linux AMD64 and ARM64; the GPU image has its own [build instructions](runpod-image/README.md).
+
+### Automatic releases
+
+The [release workflow](.github/workflows/release.yaml) builds and publishes the app image whenever a GitHub release is published. Commit and push the workflow and application changes, then create and publish a release from the repository's **Releases** page using a semantic version tag such as `v0.1.0`.
+
+The workflow checks out that release tag, builds the `runtime` stage for Linux AMD64 and ARM64, and publishes `ghcr.io/jc-verse/antigone:0.1.0`. It also links the package to the repository using image metadata. Pre-releases such as `v0.2.0-beta.1` publish their corresponding version tag. Only explicit version tags are published; no `latest` alias is updated. Draft releases and pushing a Git tag alone do not trigger publishing.
+
+Authentication uses the repository's automatic `GITHUB_TOKEN` with `packages: write` permission; no personal token or application secrets need to be added to Actions. If the package already exists from a manual push, ensure this repository has write access under the package's **Manage Actions access** settings. After the first successful workflow run, set the package visibility to **Public** as described below. Monitor publishing in the repository's **Actions** tab; a release is available to Docker users once its workflow succeeds.
+
+### Manual publishing
+
+Log into GHCR with your GitHub username and enter a classic personal access token with `write:packages` permission at the password prompt. The account must have permission to publish packages in `jc-verse`:
+
+```sh
+docker login ghcr.io -u YOUR_GITHUB_USERNAME
+```
+
+From the project root, build and push both architectures with Docker Buildx. This example uses `0.1.0`; choose a new version tag for each release:
+
+```sh
+docker buildx build \
+  --target runtime \
+  --platform linux/amd64,linux/arm64 \
+  --label org.opencontainers.image.source=https://github.com/jc-verse/antigone \
+  --tag ghcr.io/jc-verse/antigone:0.1.0 \
+  --push .
+```
+
+After the first push, open **jc-verse → Packages → antigone → Package settings** on GitHub and set the package visibility to **Public**. New packages default to private. Public images can be pulled without registry credentials. See [GitHub's container registry documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry) and [Docker's multi-platform build documentation](https://docs.docker.com/build/building/multi-platform/).
+
+## Installing the published image
+
+Create a deployment directory with your own `compose.yaml` and `.env`. Use a published release tag in place of the example `0.1.0`:
+
+```yaml
+services:
+  antigone:
+    image: ghcr.io/jc-verse/antigone:0.1.0
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:4410:4410"
+    volumes:
+      - antigone_data:/data
+
+volumes:
+  antigone_data:
+```
+
+Copy [`.env.example`](.env.example) to `.env` and configure it as described under Docker configuration. Generate separate random values for `INIT_PASSWORD` and `BETTER_AUTH_SECRET`, and keep `BETTER_AUTH_SECRET` stable across restarts and upgrades. Set `APP_ORIGIN` to the exact browser URL: `http://localhost:4410` for local use, or your external HTTPS address behind a reverse proxy. Supply the provider keys before setting up a GPU.
+
+Before the first launch, initialize the database manually, then start the app:
+
+```sh
+docker compose pull
+docker compose run --rm --no-deps antigone bun run db:push
+docker compose up -d
+```
+
+For upgrades, change the image tag and pull the new image. If the release changes the database schema, stop the app, back up existing data, and run `db:push` before starting the new version. Schema push never runs automatically at startup. Keep the `/data` volume to preserve authentication, GPU setup, queued jobs, and the image library.
+
+After changing `.env`, recreate the container to load the new values:
+
+```sh
+docker compose up -d --force-recreate antigone
+```
+
+`docker compose restart` keeps the existing container environment and does not reload `.env`.
 
 ## Container commands
 
@@ -122,6 +194,6 @@ Formula: `ceil((unique file bytes / 1e9 + 8) / 5) * 5`. Staged downloads are ren
 
 The repository’s Compose file runs the Dockerfile’s `development` target. Start it with `docker compose up --build` and open `http://localhost:4410`. Source files are bind-mounted into the container, while a separate volume holds its Linux dependencies. Dependencies are synchronized from the lockfile at startup.
 
-Vite watches the mounted files using polling and serves hot updates over the same port as the app, including when the host port is remapped. React and CSS changes appear without rebuilding the image. Restart the container after changing `server.ts` or `.env`; rebuild it after changing the Dockerfile.
+Vite watches the mounted files using polling and serves hot updates over the same port as the app, including when the host port is remapped. React and CSS changes appear without rebuilding the image. Restart the container after changing `server.ts`, recreate it after changing `.env`, and rebuild it after changing the Dockerfile.
 
 The default Dockerfile target remains the production runtime. Build it with `docker build -t antigone .` for deployment; it contains the compiled app and does not run Vite.
